@@ -1,8 +1,9 @@
 /* 校航 PWA - Service Worker（离线缓存）
- * 修改了文件内容后，把下面 CACHE_NAME 的版本号 +1（如 v1 -> v2），
+ * 修改了文件内容后，把下面 CACHE_NAME 的版本号升一位：
+ * 小改动只升小版本（如 v2.0 -> v2.1），大改动才升大版本（如 v2.x -> v3.0）。
  * 重新打开页面就会自动更新缓存。
  */
-const CACHE_NAME = "Campuscompass-v14";
+const CACHE_NAME = "Campuscompass-v2.0";
 
 const ASSETS = [
   "./",
@@ -13,7 +14,7 @@ const ASSETS = [
   "./qrcodes/订桶装水.jpg",
   "./qrcodes/物业报修.jpg",
   "./qrcodes/广东医缴费.jpg",
-  "./maps/map.jpg"
+  "./map/map.jpg"
 ];
 
 /* 安装：逐个缓存静态资源（某个文件缺失不影响其他资源缓存） */

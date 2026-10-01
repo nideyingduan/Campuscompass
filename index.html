@@ -236,6 +236,7 @@
     margin-bottom: 18px;
   }
   .notice b { color: var(--text); }
+  .notice a { color: var(--primary); text-decoration: none; }
 </style>
 </head>
 <body>
@@ -253,7 +254,7 @@
 <main id="app"></main>
 
 <footer>
-  不要在微信里打开本网址（微信会拦截），请用手机自带的浏览器或其他浏览器打开，再添加到主屏幕，方便保存登录状态。<br>
+  微信里也能打开使用；建议用手机浏览器打开并添加到主屏幕，方便保存登录状态。<br>
   本页面为个人学习项目，非学校官方服务。<br>
   <span class="flink" onclick="showInstallGuide()">如何添加到桌面</span>
   <span class="flink" onclick="showAbout()">关于本页</span>
@@ -277,12 +278,19 @@
   <div class="modal" onclick="event.stopPropagation()">
     <h3>如何添加到桌面</h3>
     <div class="notice">
-      第 1 步：<b>不要在微信里打开本网址</b>（微信会拦截）。请复制网址，用<b>手机自带浏览器</b>（Safari / Chrome / 浏览器 App）或其他浏览器打开本页面。<br><br>
+      第 1 步：用<b>手机浏览器</b>（手机自带的浏览器 / Edge / 夸克等）打开本页面网址（微信里也能打开，但建议用手机浏览器，登录状态更稳定）。<br><br>
       · iPhone（Safari）：点底部<b>分享</b>按钮（方框+箭头）→ 选择<b>"添加到主屏幕"</b> → 点右上角<b>添加</b>。<br><br>
-      · 安卓（Chrome）：点右上角 <b>⋮</b> 菜单 → 选<b>"添加到主屏幕" / "安装应用"</b> → 确认。<br><br>
+      · 安卓（自带浏览器 / Edge / 夸克等）：点浏览器<b>菜单</b>（右上角 <b>⋮</b> 或 <b>≡</b>）→ 找<b>"添加到主屏幕" / "安装应用" / "桌面快捷方式"</b> → 确认。<br><br>
       · 如果第一次添加时手机弹<b>权限提示</b>（如"创建桌面快捷方式""安装未知应用"）→ 一定要点<b>允许</b>，否则图标无法添加到桌面。<br><br>
-      如果是在微信里打开的：先点右上角 <b>···</b> → 选<b>"在浏览器打开"</b>，再按上面操作。<br><br>
-      添加后，桌面会出现"校航"图标，点开即用，登录状态也会保存在浏览器里。
+      在微信里打开的：点右上角 <b>···</b> → 选<b>"在浏览器打开"</b>，也能按上面操作添加到桌面。<br><br>
+      添加后，桌面会出现"校航"图标，点开即用。<br><br>
+      <b>登录状态说明：</b><br>
+      · 需要登录的系统（教务系统、易班、头歌、i志愿、智慧团建等）登录<b>一次</b>后，登录状态会保存在浏览器里，下次打开<b>不用再重新登录</b>；<br><br>
+      · 但登录状态有<b>有效期</b>，过期后会被刷新掉、需要重新登录（属于正常现象，重新登录一次即可）。
+      <b>电脑版：</b><br>
+      · Edge：右上角 <b>⋯</b> → <b>应用</b> → <b>"将此站点安装为应用"</b> → 安装。<br><br>
+      · Chrome：右上角 <b>⋮</b> → <b>保存并分享</b> → <b>创建快捷方式</b> → 勾选"在窗口中打开" → 创建。<br><br>
+      安装后桌面/任务栏会出现"校航"图标，点开即用，离线也能打开。
     </div>
     <button class="btn" onclick="hideInstallGuide()">知道了</button>
   </div>
@@ -293,9 +301,9 @@
   <div class="modal" onclick="event.stopPropagation()">
     <h3>关于本页</h3>
     <div class="notice">
-      <b>校航</b>（广东医科大学）· 个人学习项目，非学校官方服务。<br><br>
-      <b>开发者：</b>nideyingduan<br>
-      <b>唯一官方仓库：</b>github.com/nideyingduan/Campuscompass<br><br>
+      <b>校航</b> · 个人学习项目，非学校官方服务。<br><br>
+      <b>开发者：</b><a href="https://github.com/nideyingduan" target="_blank" rel="noopener">nideyingduan</a><br>
+      <b>唯一官方仓库：</b><a href="https://github.com/nideyingduan/Campuscompass" target="_blank" rel="noopener">github.com/nideyingduan/Campuscompass</a><br><br>
       <b>防伪提醒：</b>本页面仅此一家，认准上方 GitHub 账号与仓库地址。任何声称"官方版""收费版"或索要账号密码的，都是仿冒，谨防上当。
     </div>
     <button class="btn" onclick="hideAbout()">知道了</button>
@@ -327,7 +335,7 @@
  *   小程序口令卡：{ name: "名", type: "wxcopylink", link: "#小程序://...", icon: "qrcode", desc: "说明" }
  *   应用商店提示卡：{ name: "名", type: "app", icon: "phone", desc: "说明" }
  *   微信搜索提示卡：{ name: "名", type: "search", icon: "search", desc: "说明" }
- *   地图卡：{ name: "名", type: "map", img: "maps/图片名.jpg", icon: "map", desc: "说明" }
+ *   地图卡：{ name: "名", type: "map", img: "map/图片名.jpg", icon: "map", desc: "说明" }
  *   课表卡：{ name: "课表", type: "timetable", icon: "calendar", desc: "说明" }
  *
  * ── 课表数据（每所学校）：在学校的对象里加 timetables 字段：
@@ -360,7 +368,7 @@ const SCHOOLS = {
           { name: "易班签到",   url: "https://app.uyiban.com/generalattendance/client/#/home", icon: "calendarCheck", desc: "易班 · 每日签到" },
           { name: "图书馆",     url: "https://tsg.gdmu.edu.cn", icon: "library", desc: "馆藏检索 · 电子资源" },
           { name: "VPN",       url: "https://vpn.gdmu.edu.cn", icon: "shield", desc: "校外访问校内资源" },
-          { name: "学校地图",   type: "map", img: "maps/map.jpg", icon: "map", desc: "东莞校区 · 校园布局" },
+          { name: "学校地图",   type: "map", img: "map/map.jpg", icon: "map", desc: "东莞校区 · 校园布局" },
         ]
       },
       {
@@ -380,14 +388,8 @@ const SCHOOLS = {
         items: [
           { name: "易班优课",   url: "https://www.yooc.me/mobile/yooc", icon: "monitor", desc: "在线课程学习" },
           { name: "头歌",       url: "https://www.educoder.net/classrooms", icon: "code", desc: "编程实训 · 需登录" },
-          { name: "学习通",     type: "app", icon: "phone", desc: "课程学习 · 需应用商店打开" },
-        ]
-      },
-      {
-        title: "网络服务", color: "#f59e0b",
-        items: [
-          { name: "校园网自助·东莞", url: "http://172.18.70.3:8080/Self/login/", icon: "wifi", desc: "宽带认证 · 自助下线" },
-          { name: "校园网自助·湛江", url: "http://202.192.112.152:8080/Self/login/", icon: "wifi", desc: "宽带认证 · 自助下线" },
+          { name: "学习通",     url: "https://i.chaoxing.com", icon: "monitor", desc: "课程学习 · 网页版" },
+          { name: "学信网",     url: "https://www.chsi.com.cn", icon: "cap", desc: "学籍学历 · 学信档案" },
         ]
       },
       {
@@ -404,7 +406,7 @@ const SCHOOLS = {
           { name: "真如校园",   type: "qr", img: "qrcodes/订桶装水.jpg", icon: "home", desc: "校园服务 · 长按识别" },
           { name: "物业报修",   type: "qr", img: "qrcodes/物业报修.jpg", link: "#小程序://诚信快修/gA5U9FRP0EkdZZv", icon: "wrench", desc: "宿舍报修 · 长按识别" },
           { name: "广东医缴费", type: "qr", img: "qrcodes/广东医缴费.jpg", icon: "card", desc: "缴费充值 · 长按识别" },
-          { name: "广东医招生", type: "search", icon: "cap", desc: "录取查询 · 微信内搜索" },
+          { name: "广东医招生", type: "wxcopylink", link: "#小程序://广东医招生/IKAuoPUwDarFUXr", icon: "cap", desc: "招生小程序 · 微信内打开" },
         ]
       },
     ]
@@ -570,7 +572,7 @@ function onCardClick(item) {
     mCopy.style.display = "none";
     mList.style.display = "none";
     mTitle.textContent = item.name;
-    mDesc.innerHTML = "「" + item.name + "」是校内系统，校外访问需要先打开 VPN。<br>已安装 aTrust：在<b>手机后台或电脑后台打开 aTrust</b>，登录后即可开启 VPN；<br>未安装 aTrust：点下方「去连 VPN」打开网页版 VPN（vpn.gdmu.edu.cn）。<br>连接后再继续访问。";
+    mDesc.innerHTML = "「" + item.name + "」是校内系统，访问前请先连接网络（<b>三选一</b>即可）：<br>① 使用 <b>aTrust</b> 登录打开 VPN；<br>② 或连接<b>校园网</b>；<br>③ 或点下方「去连 VPN」按钮跳转网页版网站。<br>连接好后再继续访问。";
     showBtns("去连 VPN", () => {
       window.open("https://vpn.gdmu.edu.cn", "_blank", "noopener");
     }, "我已连接，继续", () => {
@@ -616,7 +618,7 @@ function onCardClick(item) {
     mCopy.style.display = "none";
     mList.style.display = "none";
     mTitle.textContent = item.name;
-    mDesc.textContent = "请到手机自带应用商店搜索「" + item.name + "」下载或打开";
+    mDesc.textContent = "请到手机应用商店搜索「" + item.name + "」下载或打开";
     showBtns("知道了", null, null, null);
     mask.classList.add("show");
   } else if (item.type === "search") {
