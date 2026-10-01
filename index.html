@@ -253,7 +253,7 @@
 <main id="app"></main>
 
 <footer>
-  建议用手机自带浏览器打开本页面，并添加到主屏幕，方便保存登录状态。<br>
+  不要在微信里打开本网址（微信会拦截），请用手机自带的浏览器或其他浏览器打开，再添加到主屏幕，方便保存登录状态。<br>
   本页面为个人学习项目，非学校官方服务。<br>
   <span class="flink" onclick="showInstallGuide()">如何添加到桌面</span>
   <span class="flink" onclick="showAbout()">关于本页</span>
@@ -277,9 +277,10 @@
   <div class="modal" onclick="event.stopPropagation()">
     <h3>如何添加到桌面</h3>
     <div class="notice">
-      第 1 步：用<b>手机自带浏览器</b>（Safari / Chrome / 浏览器 App）打开本页面网址，<b>不要在微信里直接添加</b>。<br><br>
+      第 1 步：<b>不要在微信里打开本网址</b>（微信会拦截）。请复制网址，用<b>手机自带浏览器</b>（Safari / Chrome / 浏览器 App）或其他浏览器打开本页面。<br><br>
       · iPhone（Safari）：点底部<b>分享</b>按钮（方框+箭头）→ 选择<b>"添加到主屏幕"</b> → 点右上角<b>添加</b>。<br><br>
       · 安卓（Chrome）：点右上角 <b>⋮</b> 菜单 → 选<b>"添加到主屏幕" / "安装应用"</b> → 确认。<br><br>
+      · 如果第一次添加时手机弹<b>权限提示</b>（如"创建桌面快捷方式""安装未知应用"）→ 一定要点<b>允许</b>，否则图标无法添加到桌面。<br><br>
       如果是在微信里打开的：先点右上角 <b>···</b> → 选<b>"在浏览器打开"</b>，再按上面操作。<br><br>
       添加后，桌面会出现"校航"图标，点开即用，登录状态也会保存在浏览器里。
     </div>
@@ -569,7 +570,7 @@ function onCardClick(item) {
     mCopy.style.display = "none";
     mList.style.display = "none";
     mTitle.textContent = item.name;
-    mDesc.textContent = "「" + item.name + "」是校内系统，校外访问需要先打开 VPN。请先连接 VPN（vpn.gdmu.edu.cn），再继续访问。";
+    mDesc.innerHTML = "「" + item.name + "」是校内系统，校外访问需要先打开 VPN。<br>已安装 aTrust：在<b>手机后台或电脑后台打开 aTrust</b>，登录后即可开启 VPN；<br>未安装 aTrust：点下方「去连 VPN」打开网页版 VPN（vpn.gdmu.edu.cn）。<br>连接后再继续访问。";
     showBtns("去连 VPN", () => {
       window.open("https://vpn.gdmu.edu.cn", "_blank", "noopener");
     }, "我已连接，继续", () => {
