@@ -2,7 +2,7 @@
  * 修改了文件内容后，把下面 CACHE_NAME 的版本号 +1（如 v1 -> v2），
  * 重新打开页面就会自动更新缓存。
  */
-const CACHE_NAME = "Campuscompass-v13";
+const CACHE_NAME = "Campuscompass-v14";
 
 const ASSETS = [
   "./",
@@ -13,7 +13,7 @@ const ASSETS = [
   "./qrcodes/订桶装水.jpg",
   "./qrcodes/物业报修.jpg",
   "./qrcodes/广东医缴费.jpg",
-  "./maps/校园地图-东莞.jpg"
+  "./maps/map.jpg"
 ];
 
 /* 安装：逐个缓存静态资源（某个文件缺失不影响其他资源缓存） */

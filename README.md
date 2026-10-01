@@ -23,10 +23,7 @@
 │   ├── 物业报修.jpg
 │   └── 广东医缴费.jpg
 ├── maps/           # 学校地图图片
-│   └── 校园地图-东莞.jpg
-└── timetables/     # 课表文件（班级名.xls，用"安装课表.bat"自动放入）
-    ├── 26级莞临床02班.xls
-    └── ...
+│   └── map.jpg
 ```
 
 ## 怎么加一张卡片（最重要）
@@ -75,14 +72,7 @@ const SCHOOLS = {
 
 保存后刷新页面，顶部会自动出现新的学校按钮，点击即可切换。二维码图片放进 `qrcodes/` 文件夹，不同学校的图片可以加前缀区分（如 `gdmu-xxx.jpg`）。
 
-**改完任何内容后**：把 `sw.js` 最上面的版本号 `Campuscompass-v12` 改成 `Campuscompass-v13`（每次改内容就 +1），同学重新打开页面才会看到新内容（离线缓存机制要求）。
-
-## 课表功能（可选，当前未启用）
-
-课表功能默认关闭，需要时按三步开启：
-1. 把课表 .xls 文件放进 `timetables/` 文件夹（文件名 = "班级名.xls"，如 `26级莞临床02班.xls`）。
-2. 在 `index.html` 的 `SCHOOLS` → 广东医科大学对象里，把"课表功能（可选）"注释块打开，填入 学院 → 班级列表。
-3. 在"学习考试"分类加一张卡片：`{ name: "课表", type: "timetable", icon: "calendar", desc: "按学院班级查看" }`。
+**改完任何内容后**：把 `sw.js` 最上面的版本号 `Campuscompass-v13` 改成 `Campuscompass-v14`（每次改内容就 +1），同学重新打开页面才会看到新内容（离线缓存机制要求）。
 
 ## 使用声明
 
@@ -100,8 +90,8 @@ const SCHOOLS = {
 1. 注册/登录 [GitHub](https://github.com)（免费）。
 2. 右上角 `+` → **New repository** → 名字填 **`Campuscompass`** → 选 **Public**（开源给同学用）→ 不要勾选任何初始化文件 → **Create repository**。
 3. 在仓库页面点 **uploading an existing file**（上传已有文件）：
-   - 把 `index.html`、`manifest.json`、`sw.js` 拖进去；
-   - 点页面顶部把文件夹也拖进去：`icons` 和 `qrcodes` 两个文件夹；
+   - 把 `index.html`、`manifest.json`、`sw.js`、`README.md`、`LICENSE` 拖进去；
+   - 点页面顶部把文件夹也拖进去：`icons`、`qrcodes`、`maps` 三个文件夹；
    - 提交（Commit changes）。
 
 ### 第 2 步：Vercel 一键部署
@@ -126,7 +116,7 @@ const SCHOOLS = {
 
 你更新内容的操作流程：
 1. 本地改好文件（如 `index.html` 加卡片）。
-2. **把 `sw.js` 顶部版本号 +1**（现在是 `Campuscompass-v12`，改一次内容就 +1，如 v13、v14）。
+2. **把 `sw.js` 顶部版本号 +1**（现在是 `Campuscompass-v13`，改一次内容就 +1，如 v14、v15）。
 3. 把改过的文件上传到 GitHub（覆盖同名文件），Vercel 约 1 分钟自动部署。
 4. 同学下次打开页面就会自动看到新版；正在使用的同学也会自动刷新。
 
