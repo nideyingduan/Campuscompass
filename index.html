@@ -457,9 +457,14 @@ function toggleTheme() {
   localStorage.setItem("nav-theme", root.dataset.theme);
 }
 
-/* 每次打开页面，第一个弹窗：使用声明 */
+/* 每次打开页面，第一个弹窗：使用声明
+ * （同一会话只弹一次：Service Worker 首次激活会刷新一次页面，
+ *  避免刷新后声明重复弹出；下次重新打开页面仍会弹一次） */
 window.addEventListener("load", () => {
-  document.getElementById("noticeMask").classList.add("show");
+  if (!sessionStorage.getItem("nav-notice-shown")) {
+    sessionStorage.setItem("nav-notice-shown", "1");
+    document.getElementById("noticeMask").classList.add("show");
+  }
 });
 function closeNotice() {
   document.getElementById("noticeMask").classList.remove("show");
