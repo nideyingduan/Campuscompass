@@ -55,7 +55,33 @@
     cursor: pointer;
     transition: transform .08s ease;
   }
+  .theme-btn.install-btn { left: 0; right: auto; }
   .theme-btn:active { transform: scale(.94); }
+  .install-hint {
+    position: absolute;
+    left: 0;
+    top: 44px;
+    display: none;
+    background: var(--card);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    font-size: 12px;
+    color: var(--text);
+    padding: 8px 12px;
+    cursor: pointer;
+    z-index: 10;
+    animation: pop .15s ease;
+    white-space: nowrap;
+  }
+  .install-hint.show { display: block; }
+  .install-hint::before {
+    content: "";
+    position: absolute;
+    top: -5px; left: 16px;
+    width: 10px; height: 10px;
+    background: var(--card);
+    transform: rotate(45deg);
+  }
   .theme-btn svg { width: 18px; height: 18px; }
   .theme-btn .icon-sun { display: none; }
   [data-theme="dark"] .theme-btn .icon-moon { display: none; }
@@ -92,17 +118,16 @@
     margin-bottom: 14px;
     letter-spacing: 1px;
   }
-  .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
-  @media (min-width: 560px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
   @media (min-width: 900px) { .grid { grid-template-columns: repeat(3, 1fr); } }
   .card {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     background: var(--card);
     border: none;
-    border-radius: 18px;
-    padding: 18px 16px;
+    border-radius: 16px;
+    padding: 16px 14px;
     box-shadow: var(--shadow);
     cursor: pointer;
     user-select: none;
@@ -162,7 +187,23 @@
     text-align: center;
     box-shadow: 0 12px 40px rgba(0,0,0,.12);
     animation: pop .15s ease;
+    position: relative;
   }
+  .modal-back {
+    position: absolute;
+    top: 12px; left: 12px;
+    border: none;
+    background: var(--bg);
+    color: var(--text);
+    border-radius: 99px;
+    padding: 5px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .modal-back:active { opacity: .7; }
   @keyframes pop { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .modal img { width: 210px; height: 210px; border-radius: 14px; display: block; margin: 0 auto 14px; object-fit: contain; background: #fff; }
   .modal img.wide { width: 100%; height: auto; max-height: 320px; }
@@ -183,6 +224,16 @@
     border: 1px solid var(--primary);
     margin-top: 10px;
   }
+  .or-sep {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--sub);
+    font-size: 12px;
+    margin: 14px 0 2px;
+    letter-spacing: 2px;
+  }
+  .or-sep::before, .or-sep::after { content: ""; flex: 1; height: 1px; background: var(--sub); opacity: .3; }
   .modal .copybox {
     display: block;
     background: var(--bg);
@@ -244,6 +295,10 @@
 <header>
   <h1>校航</h1>
   <div class="school-name" id="schoolName">广东医科大学</div>
+  <button class="theme-btn install-btn" onclick="showInstallGuide()" aria-label="添加到桌面">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><rect x="4" y="17" width="16" height="4" rx="1.5"/></svg>
+  </button>
+  <span class="install-hint" id="installHint" onclick="showInstallGuide()">点击这里添加到手机桌面</span>
   <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" aria-label="切换深色模式">
     <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
     <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -255,14 +310,17 @@
 
 <footer>
   微信里也能打开使用；建议用手机浏览器打开并添加到主屏幕，方便保存登录状态。<br>
+  易班功能（签到/请销假/办事大厅）：微信里打开本页时点卡片可直接进入；浏览器打开会引导跳微信；苹果用户请下载易班 App。<br>
   本页面为个人学习项目，非学校官方服务。<br>
-  <span class="flink" onclick="showInstallGuide()">如何添加到桌面</span>
+  <span class="flink" onclick="showInstallGuide()">添加到桌面</span>
+  <span class="flink" onclick="showLoginInfo()">登录状态说明</span>
   <span class="flink" onclick="showAbout()">关于本页</span>
 </footer>
 
 <!-- 声明弹窗（每次打开页面第一个弹出） -->
 <div class="mask" id="noticeMask" onclick="closeNotice()">
   <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-back" onclick="closeNotice()">← 返回</button>
     <h3>使用声明</h3>
     <div class="notice">
       本页面为<b>个人学习项目，非学校官方服务</b>，与相关学校及各平台方无隶属或合作关系。<br><br>
@@ -276,17 +334,20 @@
 <!-- 安装到桌面教程弹窗 -->
 <div class="mask" id="installMask" onclick="hideInstallGuide()">
   <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-back" onclick="hideInstallGuide()">← 返回</button>
     <h3>如何添加到桌面</h3>
     <div class="notice">
-      第 1 步：用<b>手机浏览器</b>（手机自带的浏览器 / Edge / 夸克等）打开本页面网址（微信里也能打开，但建议用手机浏览器，登录状态更稳定）。<br><br>
-      · iPhone（Safari）：点底部<b>分享</b>按钮（方框+箭头）→ 选择<b>"添加到主屏幕"</b> → 点右上角<b>添加</b>。<br><br>
-      · 安卓（自带浏览器 / Edge / 夸克等）：点浏览器<b>菜单</b>（右上角 <b>⋮</b> 或 <b>≡</b>）→ 找<b>"添加到主屏幕" / "安装应用" / "桌面快捷方式"</b> → 确认。<br><br>
-      · 如果第一次添加时手机弹<b>权限提示</b>（如"创建桌面快捷方式""安装未知应用"）→ 一定要点<b>允许</b>，否则图标无法添加到桌面。<br><br>
-      在微信里打开的：点右上角 <b>···</b> → 选<b>"在浏览器打开"</b>，也能按上面操作添加到桌面。<br><br>
+      第 1 步：用<b>手机自带浏览器</b>打开本页面网址。<br><br>
+      （在微信里打开的：点右上角 <b>···</b> → 选<b>"在浏览器打开"</b>，再继续下面的操作）<br><br>
+      · <b>iPhone（Safari）：</b>点底部<b>分享</b>按钮（方框+箭头）→ 选<b>"添加到主屏幕"</b> → 点右上角<b>添加</b>。<br><br>
+      · <b>安卓 · 自带浏览器（情况一）：</b>点浏览器<b>菜单</b>（三条横线 <b>≡</b> 或三个点 <b>⋮</b>）→ 在菜单里直接找<b>"添加到桌面" / "添加到主屏幕"</b> → 确认。<br><br>
+      · <b>安卓 · 自带浏览器（情况二）：</b>菜单里没有"添加到桌面"的话，用这个方法：<br>
+      　① 先点菜单，把本页<b>"加入书签 / 收藏"</b>；<br>
+      　② 打开<b>书签 / 收藏</b>列表，找到这条书签；<br>
+      　③ <b>长按</b>这条书签 → 菜单里选<b>"添加到桌面" / "添加到主屏幕"</b>。<br><br>
+      两个情况试一下，你的手机属于哪种就用哪种。
+      · 第一次添加时手机弹<b>权限提示</b>（如"创建桌面快捷方式""安装未知应用"）→ 一定要点<b>允许</b>，否则图标无法添加到桌面。<br><br>
       添加后，桌面会出现"校航"图标，点开即用。<br><br>
-      <b>登录状态说明：</b><br>
-      · 需要登录的系统（教务系统、易班、头歌、i志愿、智慧团建等）登录<b>一次</b>后，登录状态会保存在浏览器里，下次打开<b>不用再重新登录</b>；<br><br>
-      · 但登录状态有<b>有效期</b>，过期后会被刷新掉、需要重新登录（属于正常现象，重新登录一次即可）。
       <b>电脑版：</b><br>
       · Edge：右上角 <b>⋯</b> → <b>应用</b> → <b>"将此站点安装为应用"</b> → 安装。<br><br>
       · Chrome：右上角 <b>⋮</b> → <b>保存并分享</b> → <b>创建快捷方式</b> → 勾选"在窗口中打开" → 创建。<br><br>
@@ -296,9 +357,23 @@
   </div>
 </div>
 
+<!-- 登录状态说明弹窗 -->
+<div class="mask" id="loginMask" onclick="hideLoginInfo()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-back" onclick="hideLoginInfo()">← 返回</button>
+    <h3>登录状态说明</h3>
+    <div class="notice">
+      · 需要登录的系统（教务系统、易班、头歌、i志愿、智慧团建等）登录<b>一次</b>后，登录状态会保存在浏览器里，下次打开<b>不用再重新登录</b>。<br><br>
+      · 但登录状态有<b>有效期</b>，过期后会被刷新掉、需要重新登录（属于正常现象，重新登录一次即可）。
+    </div>
+    <button class="btn" onclick="hideLoginInfo()">知道了</button>
+  </div>
+</div>
+
 <!-- 关于本页弹窗 -->
 <div class="mask" id="aboutMask" onclick="hideAbout()">
   <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-back" onclick="hideAbout()">← 返回</button>
     <h3>关于本页</h3>
     <div class="notice">
       <b>校航</b> · 个人学习项目，非学校官方服务。<br><br>
@@ -313,6 +388,7 @@
 <!-- 功能弹层（二维码 / 地图 / 课表 / 提示） -->
 <div class="mask" id="mask" onclick="closeModal()">
   <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-back" onclick="closeModal()">← 返回</button>
     <h3 id="mTitle"></h3>
     <img id="mImg" alt="" style="display:none">
     <div class="copybox" id="mCopy" style="display:none"></div>
@@ -320,6 +396,8 @@
     <p id="mDesc"></p>
     <button class="btn" id="mBtn1" onclick="modalAction(1)">知道了</button>
     <button class="btn secondary" id="mBtn2" onclick="modalAction(2)" style="display:none">知道了</button>
+    <div class="or-sep" id="orSep" style="display:none">或</div>
+    <button class="btn secondary" id="mBtn3" onclick="modalAction(3)" style="display:none">知道了</button>
   </div>
 </div>
 
@@ -330,6 +408,9 @@
  * ── 加一张卡片：在对应学校的 groups → 分类 → items 里加一行：
  *   { name: "卡片名", url: "https://...", icon: "图标名", desc: "说明" }
  *   （校外需先连 VPN 的系统加 vpn: true；图标名从下面 ICONS 里挑）
+ *   苹果专用链接：同一张卡苹果用不同链接时，加 iosUrl: "https://苹果链接"，
+ *   苹果手机会自动用 iosUrl，其他设备用 url
+ *   易班微信引导卡（安卓复制网址+唤起微信，苹果去 App Store）：{ name: "名", type: "wxhint", url: "https://...", icon: "图标名", desc: "说明" }
  *   小程序二维码卡：{ name: "名", type: "qr", img: "qrcodes/图.jpg",
  *                    link: "可选链接", icon: "qrcode", desc: "说明" }
  *   小程序口令卡：{ name: "名", type: "wxcopylink", link: "#小程序://...", icon: "qrcode", desc: "说明" }
@@ -365,18 +446,24 @@ const SCHOOLS = {
         items: [
           { name: "网办大厅",   url: "https://ehall.gdmu.edu.cn", icon: "clipboard", desc: "网上办事 · 申请审批" },
           { name: "教务系统",   url: "http://jw.gdmu.edu.cn", icon: "book", desc: "选课 · 成绩 · 先连 VPN", vpn: true },
-          { name: "易班签到",   url: "https://app.uyiban.com/generalattendance/client/#/home", icon: "calendarCheck", desc: "易班 · 每日签到" },
           { name: "图书馆",     url: "https://tsg.gdmu.edu.cn", icon: "library", desc: "馆藏检索 · 电子资源" },
           { name: "VPN",       url: "https://vpn.gdmu.edu.cn", icon: "shield", desc: "校外访问校内资源" },
           { name: "学校地图",   type: "map", img: "map/map.jpg", icon: "map", desc: "东莞校区 · 校园布局" },
         ]
       },
       {
+        title: "易广医", color: "#0284c7",
+        items: [
+          { name: "易班签到",   type: "wxhint", url: "https://app.uyiban.com/generalattendance/client/#/home", icon: "calendarCheck", desc: "微信内直接用 · 苹果用 App" },
+          { name: "易班请销假", type: "wxhint", url: "https://app.uyiban.com/leaverequestingelimination/student/#/home?AppId=99bfc8c2fc191ea36b7ac79eeb3b007f&AppName=%E8%AF%B7%E9%94%80%E5%81%87&UniversityId=ac31ab5837ea02fa21295d5f8acf065b", icon: "calendar", desc: "微信内直接用 · 苹果用 App" },
+          { name: "易班办事大厅", type: "wxhint", url: "https://app.uyiban.com/epidemicprevention/client/#/home?AppId=f152365a40b570dd1ec954af4bf3fb01&AppName=%E5%8A%9E%E4%BA%8B%E5%A4%A7%E5%8E%85&UniversityId=ac31ab5837ea02fa21295d5f8acf065b", icon: "briefcase", desc: "微信内直接用 · 苹果用 App" },
+          { name: "易班 App",   type: "app", icon: "phone", desc: "苹果/安卓 · 应用商店下载" },
+        ]
+      },
+      {
         title: "学工办事", color: "#8b5cf6",
         items: [
           { name: "智慧学工",   url: "https://xg.gdmu.edu.cn/xsfw/sys/swmxggzptapp/*default/index.do", icon: "users", desc: "学工服务 · 先连 VPN", vpn: true },
-          { name: "易班办事大厅", url: "https://app.uyiban.com/epidemicprevention/client/#/home?AppId=f152365a40b570dd1ec954af4bf3fb01&AppName=%E5%8A%9E%E4%BA%8B%E5%A4%A7%E5%8E%85&UniversityId=ac31ab5837ea02fa21295d5f8acf065b", icon: "briefcase", desc: "易班 · 线上办事" },
-          { name: "易班请销假", url: "https://app.uyiban.com/leaverequestingelimination/student/#/home?AppId=99bfc8c2fc191ea36b7ac79eeb3b007f&AppName=%E8%AF%B7%E9%94%80%E5%81%87&UniversityId=ac31ab5837ea02fa21295d5f8acf065b", icon: "calendar", desc: "易班 · 请假销假" },
           { name: "i志愿",     url: "https://wxcs.gdzyz.cn/home", icon: "heart", desc: "志愿服务 · 时长记录" },
           { name: "智慧团建",   url: "https://tuan.12355.net/wechat/index.html", icon: "flag", desc: "团组织事务" },
           { name: "校园开放日登记", url: "https://www.wjx.top/vm/m4qhsfl.aspx", icon: "userPlus", desc: "访客预约登记" },
@@ -471,13 +558,33 @@ window.addEventListener("load", () => {
 });
 function closeNotice() {
   document.getElementById("noticeMask").classList.remove("show");
+  showInstallHint(); /* 声明关闭后，弹出"添加到桌面"气泡提示 */
 }
 
-/* 安装教程 / 关于本页 */
-function showInstallGuide() { document.getElementById("installMask").classList.add("show"); }
+/* 安装教程 / 登录状态 / 关于本页 */
+function showInstallGuide() {
+  document.getElementById("installMask").classList.add("show");
+  hideInstallHint();
+}
 function hideInstallGuide() { document.getElementById("installMask").classList.remove("show"); }
+function showLoginInfo() { document.getElementById("loginMask").classList.add("show"); }
+function hideLoginInfo() { document.getElementById("loginMask").classList.remove("show"); }
 function showAbout() { document.getElementById("aboutMask").classList.add("show"); }
 function hideAbout() { document.getElementById("aboutMask").classList.remove("show"); }
+
+/* "添加到桌面"气泡提示：每个会话首次显示一次，8 秒后自动消失 */
+function showInstallHint() {
+  const hint = document.getElementById("installHint");
+  if (!hint) return;
+  if (sessionStorage.getItem("nav-install-hint")) return;
+  sessionStorage.setItem("nav-install-hint", "1");
+  hint.classList.add("show");
+  setTimeout(() => hint.classList.remove("show"), 8000);
+}
+function hideInstallHint() {
+  const hint = document.getElementById("installHint");
+  if (hint) hint.classList.remove("show");
+}
 
 /* 学校切换器 */
 const schoolKeys = Object.keys(SCHOOLS);
@@ -499,16 +606,22 @@ schoolKeys.forEach((key) => {
   schoolBar.appendChild(chip);
 });
 
+/* 苹果 / 安卓自动选择：卡片加 iosUrl 字段后，苹果手机自动用 iosUrl，其他设备用 url */
+const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+/* 是否在微信内置浏览器里（在微信里点易班卡可以直接用） */
+const isWeixin = /MicroMessenger/i.test(navigator.userAgent);
+
 const app = document.getElementById("app");
-const mask = document.getElementById("mask");
-const mTitle = document.getElementById("mTitle");
+const mask = document.getElementById("mask");const mTitle = document.getElementById("mTitle");
 const mImg = document.getElementById("mImg");
 const mCopy = document.getElementById("mCopy");
 const mList = document.getElementById("mList");
 const mDesc = document.getElementById("mDesc");
 const mBtn1 = document.getElementById("mBtn1");
 const mBtn2 = document.getElementById("mBtn2");
-let act1 = null, act2 = null;
+const mBtn3 = document.getElementById("mBtn3");
+const orSep = document.getElementById("orSep");
+let act1 = null, act2 = null, act3 = null;
 
 function render() {
   const data = SCHOOLS[currentSchool];
@@ -574,16 +687,36 @@ function onCardClick(item) {
     mTitle.textContent = item.name;
     mDesc.innerHTML = "「" + item.name + "」是校内系统，访问前请先连接网络（<b>三选一</b>即可）：<br>① 使用 <b>aTrust</b> 登录打开 VPN；<br>② 或连接<b>校园网</b>；<br>③ 或点下方「去连 VPN」按钮跳转网页版网站。<br>连接好后再继续访问。";
     showBtns("去连 VPN", () => {
-      window.open("https://vpn.gdmu.edu.cn", "_blank", "noopener");
+      window.location.href = "https://vpn.gdmu.edu.cn";
     }, "我已连接，继续", () => {
       closeModal();
-      window.open(item.url, "_blank", "noopener");
+      window.location.href = item.url;
     });
     mask.classList.add("show");
     return;
   }
+  /* 易班类：微信内（安卓）直接跳功能界面；安卓浏览器引导打开微信；苹果引导易班 App */
+  if (item.type === "wxhint") {
+    if (isWeixin && !isIOS) {
+      window.location.href = item.url; /* 已在微信里，直接进入 */
+      return;
+    }
+    mImg.style.display = "none";
+    mCopy.style.display = "none";
+    mList.style.display = "none";
+    mTitle.textContent = item.name;
+    if (isIOS) {
+      mDesc.innerHTML = "「" + item.name + "」在苹果设备请使用<b>易班 App</b>（微信里也无法打开易班页面）：<br><br>点下方「去 App Store」下载易班，登录后在 App 内使用。";
+      showBtns("去 App Store", () => { closeModal(); window.location.href = "https://apps.apple.com/cn/app/id914927889"; }, "知道了", null);
+    } else {
+      mDesc.innerHTML = "你正在<b>浏览器</b>中打开本页，「" + item.name + "」在浏览器里打不开：<br>① 点「复制链接」复制功能链接；<br>② 点「打开微信」，把链接粘贴到任意聊天框发送并点开即可进入；<br>③ 或点「用易班 App」去官方下载页（也可自行到手机自带应用商店搜索「易班」）。<br><br><b>注：</b>上面「复制链接 + 打开微信」的方式<b>仅安卓手机</b>可用；<b>苹果</b>用户请用下方的「用易班 App」。";
+      showBtns("复制链接", () => copyText(item.url), "打开微信", () => { closeModal(); window.location.href = "weixin://"; }, "用易班 App", () => { closeModal(); window.location.href = isIOS ? "https://apps.apple.com/cn/app/id914927889" : "https://www.yiban.cn/mobile/mobile.html"; });
+    }
+    mask.classList.add("show");
+    return;
+  }
   if (item.url) {
-    window.open(item.url, "_blank", "noopener");
+    window.location.href = (isIOS && item.iosUrl) ? item.iosUrl : item.url;
   } else if (item.type === "qr") {
     mImg.className = "";
     mTitle.textContent = item.name;
@@ -609,7 +742,7 @@ function onCardClick(item) {
     mImg.src = item.img;
     mImg.style.display = "block";
     mDesc.textContent = "点击查看大图，可保存到手机";
-    showBtns("查看大图", () => window.open(item.img, "_blank", "noopener"), null, null);
+    showBtns("查看大图", () => window.location.href = item.img, null, null);
     mask.classList.add("show");
   } else if (item.type === "timetable") {
     openTimetable();
@@ -685,10 +818,10 @@ function showTimetableImg(school, cls) {
   mList.style.display = "none";
   mTitle.textContent = cls;
   mDesc.textContent = "课表文件已就绪，点击打开（手机建议用 WPS 查看）";
-  showBtns("打开课表", () => window.open(file, "_blank", "noopener"), "重新选择", () => openTimetable());
+  showBtns("打开课表", () => window.location.href = file, "重新选择", () => openTimetable());
 }
 
-function showBtns(text1, fn1, text2, fn2) {
+function showBtns(text1, fn1, text2, fn2, text3, fn3) {
   mBtn1.textContent = text1;
   act1 = fn1;
   if (text2 && fn2) {
@@ -699,10 +832,20 @@ function showBtns(text1, fn1, text2, fn2) {
     mBtn2.style.display = "none";
     act2 = null;
   }
+  if (text3 && fn3) {
+    mBtn3.textContent = text3;
+    mBtn3.style.display = "block";
+    orSep.style.display = "flex";
+    act3 = fn3;
+  } else {
+    mBtn3.style.display = "none";
+    orSep.style.display = "none";
+    act3 = null;
+  }
 }
 
 function modalAction(n) {
-  const fn = n === 1 ? act1 : act2;
+  const fn = n === 1 ? act1 : (n === 2 ? act2 : act3);
   if (fn) fn(); else closeModal();
 }
 

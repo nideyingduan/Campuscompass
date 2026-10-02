@@ -3,14 +3,13 @@
  * 小改动只升小版本（如 v2.0 -> v2.1），大改动才升大版本（如 v2.x -> v3.0）。
  * 重新打开页面就会自动更新缓存。
  */
-const CACHE_NAME = "Campuscompass-v2.0";
+const CACHE_NAME = "Campuscompass-v3.0";
 
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
+  "./icons/icon.svg",
   "./qrcodes/订桶装水.jpg",
   "./qrcodes/物业报修.jpg",
   "./qrcodes/广东医缴费.jpg",
