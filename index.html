@@ -285,10 +285,10 @@
   }
   .notice {
     text-align: left;
-    font-size: 12.5px;
+    font-size: 12px;
     color: var(--sub);
-    line-height: 1.75;
-    margin-bottom: 18px;
+    line-height: 1.6;
+    margin-bottom: 16px;
   }
   .notice b { color: var(--text); }
   .notice a { color: var(--primary); text-decoration: none; }
@@ -341,21 +341,15 @@
     <button class="modal-back" onclick="hideInstallGuide()">← 返回</button>
     <h3>如何添加到桌面</h3>
     <div class="notice">
-      第 1 步：用<b>手机自带浏览器</b>打开本页面网址。<br><br>
-      （在微信里打开的：点右上角 <b>···</b> → 选<b>"在浏览器打开"</b>，再继续下面的操作）<br><br>
-      · <b>iPhone（Safari）：</b>点底部<b>分享</b>按钮（方框+箭头）→ 选<b>"添加到主屏幕"</b> → 点右上角<b>添加</b>。<br><br>
-      · <b>安卓 · 自带浏览器（情况一）：</b>点浏览器<b>菜单</b>（三条横线 <b>≡</b> 或三个点 <b>⋮</b>）→ 在菜单里直接找<b>"添加到桌面" / "添加到主屏幕"</b> → 确认。<br><br>
-      · <b>安卓 · 自带浏览器（情况二）：</b>菜单里没有"添加到桌面"的话，用这个方法：<br>
-      　① 先点菜单，把本页<b>"加入书签 / 收藏"</b>；<br>
-      　② 打开<b>书签 / 收藏</b>列表，找到这条书签；<br>
-      　③ <b>长按</b>这条书签 → 菜单里选<b>"添加到桌面" / "添加到主屏幕"</b>。<br><br>
-      两个情况试一下，你的手机属于哪种就用哪种。
-      · 第一次添加时手机弹<b>权限提示</b>（如"创建桌面快捷方式""安装未知应用"）→ 一定要点<b>允许</b>，否则图标无法添加到桌面。<br><br>
-      添加后，桌面会出现"校航"图标，点开即用。<br><br>
-      <b>电脑版：</b><br>
-      · Edge：右上角 <b>⋯</b> → <b>应用</b> → <b>"将此站点安装为应用"</b> → 安装。<br><br>
-      · Chrome：右上角 <b>⋮</b> → <b>保存并分享</b> → <b>创建快捷方式</b> → 勾选"在窗口中打开" → 创建。<br><br>
-      安装后桌面/任务栏会出现"校航"图标，点开即用，离线也能打开。
+      用<b>手机浏览器</b>打开本页（微信里打开的：点右上角 <b>···</b> → "在浏览器打开"）。<br><br>
+      <b>注意：夸克浏览器不支持添加到桌面，请用下面的浏览器。</b><br><br>
+      · <b>Edge：</b>菜单（<b>⋯</b>）里选<b>"创建桌面快捷方式"</b>。<br><br>
+      · <b>iPhone · Safari：</b>底部<b>分享</b> → <b>添加到主屏幕</b> → 右上角<b>添加</b>。<br><br>
+      · <b>安卓 · 自带浏览器：</b><br>
+      　情况一：菜单（<b>≡</b> / <b>⋮</b>）里直接有<b>"添加到桌面"</b>；<br>
+      　情况二：菜单里没有 → 先<b>加入书签</b>，再在书签列表<b>长按</b>它 → <b>添加到桌面</b>。<br><br>
+      · 首次添加弹权限提示 → 点<b>允许</b>。之后桌面出现"校航"图标，点开即用。<br><br>
+      <b>电脑版：</b>Edge：<b>⋯</b> → 应用 → 安装此站点；Chrome：<b>⋮</b> → 保存并分享 → 创建快捷方式。
     </div>
     <button class="btn" onclick="hideInstallGuide()">知道了</button>
   </div>
@@ -720,7 +714,15 @@ function onCardClick(item) {
     return;
   }
   if (item.url) {
-    window.location.href = (isIOS && item.iosUrl) ? item.iosUrl : item.url;
+    /* 每次点外部网站：提示怎么返回校航 */
+    mImg.style.display = "none";
+    mCopy.style.display = "none";
+    mList.style.display = "none";
+    mTitle.textContent = item.name;
+    mDesc.innerHTML = "即将打开<b>「" + item.name + "」</b>。<br><br>返回校航：用手机<b>返回键</b> / 手势，或浏览器左上角<b>返回按钮</b>。";
+    showBtns("继续前往", () => { closeModal(); window.location.href = (isIOS && item.iosUrl) ? item.iosUrl : item.url; }, null, null);
+    mask.classList.add("show");
+    return;
   } else if (item.type === "qr") {
     mImg.className = "";
     mTitle.textContent = item.name;
