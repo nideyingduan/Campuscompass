@@ -3,7 +3,7 @@
  * 小改动只升小版本（如 v2.0 -> v2.1），大改动才升大版本（如 v2.x -> v3.0）。
  * 重新打开页面就会自动更新缓存。
  */
-const CACHE_NAME = "Campuscompass-v3.0";
+const CACHE_NAME = "Campuscompass-v3.1";
 
 const ASSETS = [
   "./",
