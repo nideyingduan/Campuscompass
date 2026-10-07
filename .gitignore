@@ -1,0 +1,19 @@
+# 操作系统 / 编辑器垃圾文件（上传部署时不应出现）
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store
+*.swp
+*~
+.vscode/
+.idea/
+
+# 部署打包临时产物
+*.zip
+*.7z
+*.rar
+
+# 本地临时/备份
+*.tmp
+*.bak
+*.log

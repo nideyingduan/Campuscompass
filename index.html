@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#3b82f6">
+<title>校航</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon.svg">
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card: #ffffff;
+    --text: #3f3f46;
+    --sub: #9ca3af;
+    --shadow: 0 4px 12px rgba(0,0,0,.05);
+    --primary: #3b82f6;
+  }
+  [data-theme="dark"] {
+    --bg: #101014;
+    --card: #1c1c22;
+    --text: #e4e4e7;
+    --sub: #7c7c87;
+    --shadow: 0 4px 14px rgba(0,0,0,.35);
+    --primary: #60a5fa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    line-height: 1.5;
+    transition: background .2s ease, color .2s ease;
+  }
+  header {
+    position: relative;
+    text-align: center;
+    padding: 8px 0 20px;
+  }
+  header h1 { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+  header .school-name { font-size: 12px; color: var(--sub); margin-top: 4px; }
+  .theme-btn {
+    position: absolute;
+    top: 0; right: 0;
+    width: 38px; height: 38px;
+    border: none;
+    border-radius: 12px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    color: var(--text);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: transform .08s ease;
+  }
+  .theme-btn.install-btn { left: 0; right: auto; }
+  .theme-btn:active { transform: scale(.94); }
+  .install-hint {
+    position: absolute;
+    left: 0;
+    top: 44px;
+    display: none;
+    background: var(--card);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    font-size: 12px;
+    color: var(--text);
+    padding: 8px 12px;
+    cursor: pointer;
+    z-index: 10;
+    animation: pop .15s ease;
+    white-space: nowrap;
+  }
+  .install-hint.show { display: block; }
+  .install-hint::before {
+    content: "";
+    position: absolute;
+    top: -5px; left: 16px;
+    width: 10px; height: 10px;
+    background: var(--card);
+    transform: rotate(45deg);
+  }
+  .theme-btn svg { width: 18px; height: 18px; }
+  .theme-btn .icon-sun { display: none; }
+  [data-theme="dark"] .theme-btn .icon-moon { display: none; }
+  [data-theme="dark"] .theme-btn .icon-sun { display: block; }
+  .school-bar {
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .school-chip {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 99px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    color: var(--sub);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: all .15s ease;
+  }
+  .school-chip.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(59,130,246,.35);
+  }
+  section { margin-bottom: 32px; }
+  h2 {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sub);
+    padding-left: 10px;
+    border-left: 3px solid var(--cat, var(--primary));
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+  }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (min-width: 900px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+    background: var(--card);
+    border: none;
+    border-radius: 16px;
+    padding: 16px 10px;
+    min-height: 118px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    user-select: none;
+    transition: transform .08s ease, box-shadow .15s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card:active { transform: scale(.98); }
+  .icon {
+    flex: 0 0 auto;
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon svg { width: 20px; height: 20px; }
+  .info { min-width: 0; width: 100%; }
+  .info .name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .info .desc { font-size: 11px; color: var(--sub); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  footer {
+    margin-top: 40px;
+    font-size: 11px;
+    color: var(--sub);
+    text-align: center;
+    line-height: 1.8;
+    padding-top: 16px;
+  }
+  footer .flink {
+    display: inline-block;
+    color: var(--primary);
+    font-size: 12px;
+    cursor: pointer;
+    margin: 6px 8px 0;
+    border: none;
+    background: none;
+    padding: 0;
+  }
+  footer .flink:active { opacity: .7; }
+  /* 弹层 */
+  .mask {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+    padding: 24px;
+  }
+  .mask.show { display: flex; }
+  .modal {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 26px 24px;
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 12px 40px rgba(0,0,0,.12);
+    animation: pop .15s ease;
+    position: relative;
+  }
+  .modal-back {
+    position: absolute;
+    top: 12px; left: 12px;
+    border: none;
+    background: var(--bg);
+    color: var(--text);
+    border-radius: 99px;
+    padding: 5px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .modal-back:active { opacity: .7; }
+  @keyframes pop { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal img { width: 210px; height: 210px; border-radius: 14px; display: block; margin: 0 auto 14px; object-fit: contain; background: #fff; }
+  .modal img.wide { width: 100%; height: auto; max-height: 320px; }
+  .modal h3 { font-size: 17px; margin-bottom: 8px; }
+  .modal p { font-size: 13px; color: var(--sub); margin-bottom: 18px; }
+  .modal .btn {
+    display: block; width: 100%;
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 12px;
+    padding: 12px; font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    transition: opacity .1s ease;
+  }
+  .modal .btn:active { opacity: .85; }
+  .modal .btn.secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    margin-top: 10px;
+  }
+  .or-sep {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--sub);
+    font-size: 12px;
+    margin: 14px 0 2px;
+    letter-spacing: 2px;
+  }
+  .or-sep::before, .or-sep::after { content: ""; flex: 1; height: 1px; background: var(--sub); opacity: .3; }
+  .modal .copybox {
+    display: block;
+    background: var(--bg);
+    border: 1px dashed var(--sub);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 11px;
+    color: var(--text);
+    word-break: break-all;
+    margin-bottom: 12px;
+    text-align: left;
+  }
+  .modal .listbox {
+    max-height: 280px;
+    overflow-y: auto;
+    margin-bottom: 14px;
+    text-align: left;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal .list-item {
+    display: block; width: 100%;
+    background: var(--bg);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: transform .06s ease;
+  }
+  .modal .list-item:active { transform: scale(.98); }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    color: var(--sub);
+    border: 1px solid var(--sub);
+    opacity: .7;
+    border-radius: 99px;
+    padding: 1px 7px;
+    margin-left: 4px;
+    vertical-align: 1px;
+  }
+  .notice {
+    text-align: left;
+    font-size: 12px;
+    color: var(--sub);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .notice b { color: var(--text); }
+  .notice a { color: var(--primary); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>校航</h1>
+  <div class="school-name" id="schoolName">广东医科大学</div>
+  <button class="theme-btn install-btn" onclick="showInstallGuide()" aria-label="添加到桌面">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><rect x="4" y="17" width="16" height="4" rx="1.5"/></svg>
+  </button>
+  <span class="install-hint" id="installHint" onclick="showInstallGuide()">点击这里添加到手机桌面</span>
+  <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" aria-label="切换深色模式">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+  <div class="school-bar" id="schoolBar"></div>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  微信里也能打开使用；建议用手机浏览器打开并添加到主屏幕，方便保存登录状态。<br>
+  易班功能（签到/请销假/办事大厅）：微信里打开本页时点卡片可直接进入；浏览器打开会引导跳微信；苹果用户请下载易班 App。<br>
+  本页面为个人学习项目，非学校官方服务。<br>
+  <span class="flink" onclick="showInstallGuide()">添加到桌面</span>
+  <span class="flink" onclick="showLoginInfo()">登录状态说明</span>
+  <span class="flink" onclick="showAbout()">关于本页</span>
+</footer>
+
+<!-- 声明弹窗（每次打开页面第一个弹出） -->
+<div class="mask" id="noticeMask" onclick="closeNotice()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-back" onclick="closeNotice()">← 返回</button>
+    <h3>使用声明</h3>
+    <div class="notice">
+      本页面为<b>个人学习项目，非学校官方服务</b>，与相关学校及各平台方无隶属或合作关系。<br><br>
+      页面仅聚合公开的网络入口，方便日常访问，<b>不涉及</b>账号登录、自动签到、数据抓取等任何越权操作。各系统的登录与数据均归属其所属平台/学校，请遵守相应使用规则。<br><br>
+      项目代码开源供学习交流，使用风险自负。页面中出现的名称、标识等版权归各自所有方所有。
+    </div>
+    <button class="btn" onclick="closeNotice()">我已知晓，进入</button>
+  </div>
+</div>
+
+<!-- 安装到桌面教程弹窗 -->
+<div class="mask" id="installMask" onclick="hideInstallGuide()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-back" onclick="hideInstallGuide()">← 返回</button>
+    <h3>如何添加到桌面</h3>
+    <div class="notice">
+      用<b>手机浏览器</b>打开本页（微信里打开的：点右上角 <b>···</b> → "在浏览器打开"）。<br><br>
+      <b>注意：夸克浏览器不支持添加到桌面，请用下面的浏览器。</b><br><br>
+      · <b>Edge：</b>菜单（<b>⋯</b>）里选<b>"创建桌面快捷方式"</b>。<br><br>
+      · <b>iPhone · Safari：</b>底部<b>分享</b> → <b>添加到主屏幕</b> → 右上角<b>添加</b>。<br><br>
+      · <b>安卓 · 自带浏览器：</b><br>
+      　情况一：菜单（<b>≡</b> / <b>⋮</b>）里直接有<b>"添加到桌面"</b>；<br>
+      　情况二：菜单里没有 → 先<b>加入书签</b>，再在书签列表<b>长按</b>它 → <b>添加到桌面</b>。<br><br>
+      · 首次添加弹权限提示 → 点<b>允许</b>。之后桌面出现"校航"图标，点开即用。<br><br>
+      <b>电脑版：</b>Edge：<b>⋯</b> → 应用 → 安装此站点；Chrome：<b>⋮</b> → 保存并分享 → 创建快捷方式。
+    </div>
+    <button class="btn" onclick="hideInstallGuide()">知道了</button>
+  </div>
+</div>
+
+<!-- 登录状态说明弹窗 -->
+<div class="mask" id="loginMask" onclick="hideLoginInfo()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-back" onclick="hideLoginInfo()">← 返回</button>
+    <h3>登录状态说明</h3>
+    <div class="notice">
+      · 需要登录的系统（教务系统、易班、头歌、i志愿、智慧团建等）登录<b>一次</b>后，登录状态会保存在浏览器里，下次打开<b>不用再重新登录</b>。<br><br>
+      · 但登录状态有<b>有效期</b>，过期后会被刷新掉、需要重新登录（属于正常现象，重新登录一次即可）。
+    </div>
+    <button class="btn" onclick="hideLoginInfo()">知道了</button>
+  </div>
+</div>
+
+<!-- 关于本页弹窗 -->
+<div class="mask" id="aboutMask" onclick="hideAbout()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-back" onclick="hideAbout()">← 返回</button>
+    <h3>关于本页</h3>
+    <div class="notice">
+      <b>校航</b> · 个人学习项目，非学校官方服务。<br><br>
+      <b>开发者：</b><a href="https://github.com/nideyingduan" target="_blank" rel="noopener">nideyingduan</a><br>
+      <b>唯一官方仓库：</b><a href="https://github.com/nideyingduan/Campuscompass" target="_blank" rel="noopener">github.com/nideyingduan/Campuscompass</a><br><br>
+      <b>防伪提醒：</b>本页面仅此一家，认准上方 GitHub 账号与仓库地址。任何声称"官方版""收费版"或索要账号密码的，都是仿冒，谨防上当。
+    </div>
+    <button class="btn" onclick="hideAbout()">知道了</button>
+  </div>
+</div>
+
+<!-- 功能弹层（二维码 / 地图 / 课表 / 提示） -->
+<div class="mask" id="mask" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-back" onclick="closeModal()">← 返回</button>
+    <h3 id="mTitle"></h3>
+    <img id="mImg" alt="" style="display:none">
+    <div class="copybox" id="mCopy" style="display:none"></div>
+    <div class="listbox" id="mList" style="display:none"></div>
+    <p id="mDesc"></p>
+    <button class="btn" id="mBtn1" onclick="modalAction(1)">知道了</button>
+    <button class="btn secondary" id="mBtn2" onclick="modalAction(2)" style="display:none">知道了</button>
+    <div class="or-sep" id="orSep" style="display:none">或</div>
+    <button class="btn secondary" id="mBtn3" onclick="modalAction(3)" style="display:none">知道了</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+ * 【数据区】加学校 / 加卡片都在这里改，下面的代码不用动。
+ *
+ * ── 加一张卡片：在对应学校的 groups → 分类 → items 里加一行：
+ *   { name: "卡片名", url: "https://...", icon: "图标名", desc: "说明" }
+ *   （校外需先连 VPN 的系统加 vpn: true；图标名从下面 ICONS 里挑）
+ *   苹果专用链接：同一张卡苹果用不同链接时，加 iosUrl: "https://苹果链接"，
+ *   苹果手机会自动用 iosUrl，其他设备用 url
+ *   易班微信引导卡（安卓复制网址+唤起微信，苹果去 App Store）：{ name: "名", type: "wxhint", url: "https://...", icon: "图标名", desc: "说明" }
+ *   小程序二维码卡：{ name: "名", type: "qr", img: "qrcodes/图.jpg",
+ *                    link: "可选链接", icon: "qrcode", desc: "说明" }
+ *   小程序口令卡：{ name: "名", type: "wxcopylink", link: "#小程序://...", icon: "qrcode", desc: "说明" }
+ *   应用商店提示卡：{ name: "名", type: "app", icon: "phone", desc: "说明" }
+ *   微信搜索提示卡：{ name: "名", type: "search", icon: "search", desc: "说明" }
+ *   地图卡：{ name: "名", type: "map", img: "map/图片名.jpg", icon: "map", desc: "说明" }
+ *   课表卡：{ name: "课表", type: "timetable", icon: "calendar", desc: "说明" }
+ *
+ * ── 课表数据（每所学校）：在学校的对象里加 timetables 字段：
+ *   timetables: {
+ *     "学院名": ["班级1", "班级2", ...],
+ *   }
+ *   图片放到 timetables/ 文件夹，文件名为 "学院名-班级名.jpg"
+ *   （例：timetables/基础医学院-临床医学1班.jpg）
+ *
+ * ── 加一所学校：复制一段 SCHOOLS 里的对象，key 用字母，name 填学校名，
+ *    顶部会自动出现切换按钮。
+ * ============================================================ */
+const SCHOOLS = {
+  gdmu: {
+    name: "广东医科大学",
+    /* 课表功能（可选，暂未启用）：
+     * 需要时把下面注释打开，填入 学院 → 班级列表，
+     * 并把课表文件放进 timetables/ 文件夹（文件名 = 班级名.xls），
+     * 页面上再加一张 { name: "课表", type: "timetable", icon: "calendar", desc: "按学院班级查看" } 卡片即可。
+     * timetables: {
+     *   "莞·临床": ["26级莞临床02班", "26级莞临床03班"],
+     * },
+     */
+    groups: [
+      {
+        title: "常用", color: "#3b82f6",
+        items: [
+          { name: "网办大厅",   url: "https://ehall.gdmu.edu.cn", icon: "clipboard", desc: "网上办事 · 申请审批" },
+          { name: "教务系统",   url: "http://jw.gdmu.edu.cn", icon: "book", desc: "选课 · 成绩 · 先连 VPN", vpn: true },
+          { name: "图书馆",     url: "https://tsg.gdmu.edu.cn", icon: "library", desc: "馆藏检索 · 电子资源" },
+          { name: "VPN",       url: "https://vpn.gdmu.edu.cn", icon: "shield", desc: "校外访问校内资源" },
+          { name: "学校地图",   type: "map", img: "map/map.jpg", icon: "map", desc: "东莞校区 · 校园布局" },
+        ]
+      },
+      {
+        title: "易广医", color: "#0284c7",
+        items: [
+          { name: "易班签到",   type: "wxhint", url: "https://app.uyiban.com/generalattendance/client/#/home", icon: "calendarCheck", desc: "微信内直接用 · 苹果用 App" },
+          { name: "易班请销假", type: "wxhint", url: "https://app.uyiban.com/leaverequestingelimination/student/#/home?AppId=99bfc8c2fc191ea36b7ac79eeb3b007f&AppName=%E8%AF%B7%E9%94%80%E5%81%87&UniversityId=ac31ab5837ea02fa21295d5f8acf065b", icon: "calendar", desc: "微信内直接用 · 苹果用 App" },
+          { name: "易班办事大厅", type: "wxhint", url: "https://app.uyiban.com/epidemicprevention/client/#/home?AppId=f152365a40b570dd1ec954af4bf3fb01&AppName=%E5%8A%9E%E4%BA%8B%E5%A4%A7%E5%8E%85&UniversityId=ac31ab5837ea02fa21295d5f8acf065b", icon: "briefcase", desc: "微信内直接用 · 苹果用 App" },
+          { name: "易班 App",   type: "app", icon: "phone", desc: "苹果/安卓 · 应用商店下载" },
+        ]
+      },
+      {
+        title: "学工办事", color: "#8b5cf6",
+        items: [
+          { name: "智慧学工",   url: "https://xg.gdmu.edu.cn/xsfw/sys/swmxggzptapp/*default/index.do", icon: "users", desc: "学工服务 · 先连 VPN", vpn: true },
+          { name: "i志愿",     url: "https://wxcs.gdzyz.cn/home", icon: "heart", desc: "志愿服务 · 时长记录" },
+          { name: "智慧团建",   url: "https://tuan.12355.net/wechat/index.html", icon: "flag", desc: "团组织事务" },
+          { name: "校园开放日登记", url: "https://www.wjx.top/vm/m4qhsfl.aspx", icon: "userPlus", desc: "访客预约登记" },
+          { name: "访客登记小程序", type: "wxcopylink", link: "#小程序://广东医访客服务/bcK5GyeCmoYsvwh", icon: "qrcode", desc: "小程序 · 微信内打开" },
+        ]
+      },
+      {
+        title: "学习考试", color: "#10b981",
+        items: [
+          { name: "易班优课",   url: "https://www.yooc.me/mobile/yooc", icon: "monitor", desc: "在线课程学习" },
+          { name: "头歌",       url: "https://www.educoder.net/classrooms", icon: "code", desc: "编程实训 · 需登录" },
+          { name: "学习通",     url: "https://i.chaoxing.com", icon: "monitor", desc: "课程学习 · 网页版" },
+          { name: "学信网",     url: "https://www.chsi.com.cn", icon: "cap", desc: "学籍学历 · 学信档案" },
+        ]
+      },
+      {
+        title: "信息资讯", color: "#0ea5e9",
+        items: [
+          { name: "学校官网",   url: "https://www.gdmu.edu.cn", icon: "globe", desc: "新闻 · 通知公告" },
+          { name: "招聘·云就业", url: "https://m.bysjy.com.cn/frontend/student/default/chance/wxwsy/?token=yxqqnn0400000019", icon: "trend", desc: "校园招聘信息" },
+          { name: "就业信息网", url: "https://jy.gdmu.edu.cn", icon: "file", desc: "学校就业指导中心" },
+        ]
+      },
+      {
+        title: "生活服务", color: "#ec4899",
+        items: [
+          { name: "真如校园",   type: "qr", img: "qrcodes/订桶装水.jpg", icon: "home", desc: "校园服务 · 长按识别" },
+          { name: "物业报修",   type: "qr", img: "qrcodes/物业报修.jpg", link: "#小程序://诚信快修/gA5U9FRP0EkdZZv", icon: "wrench", desc: "宿舍报修 · 长按识别" },
+          { name: "广东医缴费", type: "qr", img: "qrcodes/广东医缴费.jpg", icon: "card", desc: "缴费充值 · 长按识别" },
+          { name: "广东医招生", type: "wxcopylink", link: "#小程序://广东医招生/IKAuoPUwDarFUXr", icon: "cap", desc: "招生小程序 · 微信内打开" },
+        ]
+      },
+    ]
+  },
+  /* ── 加学校示例：复制上面那段，把 gdmu 换成学校缩写，name 改成学校名 ── */
+};
+
+/* 线性图标库（stroke 风格，统一 24x24）。图标名从这挑，不够可自行加 */
+const ICONS = {
+  link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>',
+  clipboard: '<rect x="8" y="2" width="8" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>',
+  book: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>',
+  calendarCheck: '<rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="m9 16 2 2 4-4"></path>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>',
+  library: '<path d="m16 6 4 14"></path><path d="M12 6v14"></path><path d="M8 8v12"></path><path d="M4 4v16"></path>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
+  briefcase: '<rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>',
+  heart: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>',
+  flag: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line>',
+  userPlus: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line>',
+  qrcode: '<rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h3v3h-3z"></path><line x1="20" y1="14" x2="20" y2="14.01"></line><line x1="20" y1="20" x2="20" y2="20.01"></line><line x1="14" y1="20" x2="17" y2="20"></line>',
+  monitor: '<rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>',
+  code: '<polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>',
+  phone: '<rect x="5" y="2" width="14" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line>',
+  wifi: '<path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line>',
+  globe: '<circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>',
+  trend: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline>',
+  file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line>',
+  home: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>',
+  card: '<rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line>',
+  cap: '<path d="M22 9 12 5 2 9l10 4 10-4z"></path><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"></path><path d="M22 9v5"></path>',
+  search: '<circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>',
+  map: '<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line>',
+};
+
+/* ---------- 以下代码不需要改动 ---------- */
+
+/* 深浅色：默认跟随系统，手动切换后记住选择 */
+(function initTheme() {
+  const saved = localStorage.getItem("nav-theme");
+  const preferDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (!saved && preferDark)) {
+    document.documentElement.dataset.theme = "dark";
+  }
+})();
+function toggleTheme() {
+  const root = document.documentElement;
+  root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+  localStorage.setItem("nav-theme", root.dataset.theme);
+}
+
+/* 每次打开页面，第一个弹窗：使用声明
+ * （同一会话只弹一次：Service Worker 首次激活会刷新一次页面，
+ *  避免刷新后声明重复弹出；下次重新打开页面仍会弹一次） */
+window.addEventListener("load", () => {
+  if (!sessionStorage.getItem("nav-notice-shown")) {
+    sessionStorage.setItem("nav-notice-shown", "1");
+    document.getElementById("noticeMask").classList.add("show");
+  }
+});
+function closeNotice() {
+  document.getElementById("noticeMask").classList.remove("show");
+  showInstallHint(); /* 声明关闭后，弹出"添加到桌面"气泡提示 */
+}
+
+/* 安装教程 / 登录状态 / 关于本页 */
+function showInstallGuide() {
+  document.getElementById("installMask").classList.add("show");
+  hideInstallHint();
+}
+function hideInstallGuide() { document.getElementById("installMask").classList.remove("show"); }
+function showLoginInfo() { document.getElementById("loginMask").classList.add("show"); }
+function hideLoginInfo() { document.getElementById("loginMask").classList.remove("show"); }
+function showAbout() { document.getElementById("aboutMask").classList.add("show"); }
+function hideAbout() { document.getElementById("aboutMask").classList.remove("show"); }
+
+/* "添加到桌面"气泡提示：每个会话首次显示一次，8 秒后自动消失 */
+function showInstallHint() {
+  const hint = document.getElementById("installHint");
+  if (!hint) return;
+  if (sessionStorage.getItem("nav-install-hint")) return;
+  sessionStorage.setItem("nav-install-hint", "1");
+  hint.classList.add("show");
+  setTimeout(() => hint.classList.remove("show"), 8000);
+}
+function hideInstallHint() {
+  const hint = document.getElementById("installHint");
+  if (hint) hint.classList.remove("show");
+}
+
+/* 学校切换器 */
+const schoolKeys = Object.keys(SCHOOLS);
+const schoolBar = document.getElementById("schoolBar");
+let currentSchool = schoolKeys[0];
+
+schoolKeys.forEach((key) => {
+  const chip = document.createElement("button");
+  chip.className = "school-chip" + (key === currentSchool ? " active" : "");
+  chip.textContent = SCHOOLS[key].name;
+  chip.addEventListener("click", () => {
+    if (key === currentSchool) return;
+    currentSchool = key;
+    render();
+    schoolBar.querySelectorAll(".school-chip").forEach((c, i) => {
+      c.classList.toggle("active", schoolKeys[i] === key);
+    });
+  });
+  schoolBar.appendChild(chip);
+});
+
+/* 苹果 / 安卓自动选择：卡片加 iosUrl 字段后，苹果手机自动用 iosUrl，其他设备用 url */
+const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+/* 是否在微信内置浏览器里（在微信里点易班卡可以直接用） */
+const isWeixin = /MicroMessenger/i.test(navigator.userAgent);
+
+const app = document.getElementById("app");
+const mask = document.getElementById("mask");const mTitle = document.getElementById("mTitle");
+const mImg = document.getElementById("mImg");
+const mCopy = document.getElementById("mCopy");
+const mList = document.getElementById("mList");
+const mDesc = document.getElementById("mDesc");
+const mBtn1 = document.getElementById("mBtn1");
+const mBtn2 = document.getElementById("mBtn2");
+const mBtn3 = document.getElementById("mBtn3");
+const orSep = document.getElementById("orSep");
+let act1 = null, act2 = null, act3 = null;
+
+function render() {
+  const data = SCHOOLS[currentSchool];
+  document.getElementById("schoolName").textContent = data.name;
+  app.innerHTML = "";
+  data.groups.forEach((cat) => {
+    const sec = document.createElement("section");
+    sec.style.setProperty("--cat", cat.color);
+    const h = document.createElement("h2");
+    h.textContent = cat.title;
+    const grid = document.createElement("div");
+    grid.className = "grid";
+    cat.items.forEach((item) => {
+      grid.appendChild(makeCard(item, cat.color));
+    });
+    sec.appendChild(h);
+    sec.appendChild(grid);
+    app.appendChild(sec);
+  });
+}
+
+function makeCard(item, color) {
+  const a = document.createElement("div");
+  a.className = "card";
+  const icon = document.createElement("div");
+  icon.className = "icon";
+  icon.style.background = color + "1a"; /* 分类色 10% 透明底 */
+  icon.style.color = color;
+  icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[item.icon] || ICONS.link) + '</svg>';
+  const info = document.createElement("div");
+  info.className = "info";
+  const name = document.createElement("div");
+  name.className = "name";
+  name.textContent = item.name;
+  if (item.type === "qr") name.appendChild(badge("小程序"));
+  if (item.type === "app") name.appendChild(badge("App"));
+  if (item.type === "search") name.appendChild(badge("搜索"));
+  if (item.type === "wxcopylink") name.appendChild(badge("小程序"));
+  const desc = document.createElement("div");
+  desc.className = "desc";
+  desc.textContent = item.desc || "";
+  info.appendChild(name);
+  info.appendChild(desc);
+  a.appendChild(icon);
+  a.appendChild(info);
+  a.addEventListener("click", () => onCardClick(item));
+  return a;
+}
+
+function badge(text) {
+  const b = document.createElement("span");
+  b.className = "badge";
+  b.textContent = text;
+  return b;
+}
+
+function onCardClick(item) {
+  /* 需要 VPN 的校内系统：先弹提示 */
+  if (item.vpn && item.url) {
+    mImg.style.display = "none";
+    mCopy.style.display = "none";
+    mList.style.display = "none";
+    mTitle.textContent = item.name;
+    mDesc.innerHTML = "「" + item.name + "」是校内系统，访问前请先连接网络（<b>三选一</b>即可）：<br>① 使用 <b>aTrust</b> 登录打开 VPN；<br>② 或连接<b>校园网</b>；<br>③ 或点下方「去连 VPN」按钮跳转网页版网站。<br>连接好后再继续访问。";
+    showBtns("去连 VPN", () => {
+      window.location.href = "https://vpn.gdmu.edu.cn";
+    }, "我已连接，继续", () => {
+      closeModal();
+      window.location.href = item.url;
+    });
+    mask.classList.add("show");
+    return;
+  }
+  /* 易班类：微信内（安卓）直接跳功能界面；安卓浏览器引导打开微信；苹果引导易班 App */
+  if (item.type === "wxhint") {
+    if (isWeixin && !isIOS) {
+      window.location.href = item.url; /* 已在微信里，直接进入 */
+      return;
+    }
+    mImg.style.display = "none";
+    mCopy.style.display = "none";
+    mList.style.display = "none";
+    mTitle.textContent = item.name;
+    if (isIOS) {
+      mDesc.innerHTML = "「" + item.name + "」在苹果设备请使用<b>易班 App</b>（微信里也无法打开易班页面）：<br><br>点下方「去 App Store」下载易班，登录后在 App 内使用。";
+      showBtns("去 App Store", () => { closeModal(); window.location.href = "https://apps.apple.com/cn/app/id914927889"; }, "知道了", null);
+    } else {
+      mDesc.innerHTML = "你正在<b>浏览器</b>中打开本页，「" + item.name + "」在浏览器里打不开：<br>① 点「复制链接」复制功能链接；<br>② 点「打开微信」，把链接粘贴到任意聊天框发送并点开即可进入；<br>③ 或点「用易班 App」去官方下载页（也可自行到手机自带应用商店搜索「易班」）。<br><br><b>注：</b>上面「复制链接 + 打开微信」的方式<b>仅安卓手机</b>可用；<b>苹果</b>用户请用下方的「用易班 App」。";
+      showBtns("复制链接", () => copyText(item.url), "打开微信", () => { closeModal(); window.location.href = "weixin://"; }, "用易班 App", () => { closeModal(); window.location.href = isIOS ? "https://apps.apple.com/cn/app/id914927889" : "https://www.yiban.cn/mobile/mobile.html"; });
+    }
+    mask.classList.add("show");
+    return;
+  }
+  if (item.url) {
+    /* 每次点外部网站：提示怎么返回校航 */
+    mImg.style.display = "none";
+    mCopy.style.display = "none";
+    mList.style.display = "none";
+    mTitle.textContent = item.name;
+    mDesc.innerHTML = "即将打开<b>「" + item.name + "」</b>。<br><br>返回校航：用手机<b>返回键</b> / 手势，或浏览器左上角<b>返回按钮</b>。";
+    showBtns("继续前往", () => { closeModal(); window.location.href = (isIOS && item.iosUrl) ? item.iosUrl : item.url; }, null, null);
+    mask.classList.add("show");
+    return;
+  } else if (item.type === "qr") {
+    mImg.className = "";
+    mTitle.textContent = item.name;
+    mCopy.style.display = "none";
+    mList.style.display = "none";
+    mImg.src = item.img;
+    mImg.style.display = "block";
+    if (item.link) {
+      mCopy.style.display = "block";
+      mCopy.textContent = item.link;
+      mDesc.textContent = "在微信中打开本页长按识别二维码；也可复制下方链接到微信打开";
+      showBtns("复制链接", () => copyText(item.link), null, null);
+    } else {
+      mDesc.textContent = "请在微信中打开本页，长按识别下方二维码";
+      showBtns("知道了", null, null, null);
+    }
+    mask.classList.add("show");
+  } else if (item.type === "map") {
+    mImg.className = "wide";
+    mTitle.textContent = item.name;
+    mCopy.style.display = "none";
+    mList.style.display = "none";
+    mImg.src = item.img;
+    mImg.style.display = "block";
+    mDesc.textContent = "点击查看大图，可保存到手机";
+    showBtns("查看大图", () => window.location.href = item.img, null, null);
+    mask.classList.add("show");
+  } else if (item.type === "timetable") {
+    openTimetable();
+  } else if (item.type === "app") {
+    mImg.style.display = "none";
+    mCopy.style.display = "none";
+    mList.style.display = "none";
+    mTitle.textContent = item.name;
+    mDesc.textContent = "请到手机应用商店搜索「" + item.name + "」下载或打开";
+    showBtns("知道了", null, null, null);
+    mask.classList.add("show");
+  } else if (item.type === "search") {
+    mImg.style.display = "none";
+    mCopy.style.display = "none";
+    mList.style.display = "none";
+    mTitle.textContent = item.name;
+    mDesc.textContent = "请在微信中搜索「" + item.name + "」小程序";
+    showBtns("知道了", null, null, null);
+    mask.classList.add("show");
+  } else if (item.type === "wxcopylink") {
+    mImg.style.display = "none";
+    mCopy.style.display = "block";
+    mList.style.display = "none";
+    mCopy.textContent = item.link;
+    mTitle.textContent = item.name;
+    mDesc.textContent = "复制口令后，打开微信粘贴到任意聊天框发送，再点击那条消息即可打开小程序。";
+    showBtns("复制口令", () => copyText(item.link), null, null);
+    mask.classList.add("show");
+  }
+}
+
+/* ── 课表：选学院 → 选班级 → 看课表图片 ── */
+function openTimetable() {
+  const tt = SCHOOLS[currentSchool].timetables || {};
+  const schools = Object.keys(tt);
+  mImg.style.display = "none";
+  mCopy.style.display = "none";
+  mTitle.textContent = "选择学院";
+  if (schools.length === 0) {
+    mList.style.display = "none";
+    mDesc.textContent = "课表正在整理中，过几天就能看啦";
+    showBtns("知道了", null, null, null);
+    mask.classList.add("show");
+    return;
+  }
+  mDesc.textContent = "";
+  renderTtList(schools, (school) => {
+    const classes = tt[school];
+    mTitle.textContent = school;
+    renderTtList(classes, (cls) => showTimetableImg(school, cls));
+  });
+  mask.classList.add("show");
+}
+
+function renderTtList(list, onPick) {
+  mList.innerHTML = "";
+  mList.style.display = "block";
+  list.forEach((name) => {
+    const b = document.createElement("button");
+    b.className = "list-item";
+    b.textContent = name;
+    b.addEventListener("click", () => onPick(name));
+    mList.appendChild(b);
+  });
+  mDesc.textContent = "";
+  showBtns("关闭", null, null, null);
+}
+
+function showTimetableImg(school, cls) {
+  const file = "timetables/" + cls + ".xls";
+  mImg.style.display = "none";
+  mCopy.style.display = "none";
+  mList.style.display = "none";
+  mTitle.textContent = cls;
+  mDesc.textContent = "课表文件已就绪，点击打开（手机建议用 WPS 查看）";
+  showBtns("打开课表", () => window.location.href = file, "重新选择", () => openTimetable());
+}
+
+function showBtns(text1, fn1, text2, fn2, text3, fn3) {
+  mBtn1.textContent = text1;
+  act1 = fn1;
+  if (text2 && fn2) {
+    mBtn2.textContent = text2;
+    mBtn2.style.display = "block";
+    act2 = fn2;
+  } else {
+    mBtn2.style.display = "none";
+    act2 = null;
+  }
+  if (text3 && fn3) {
+    mBtn3.textContent = text3;
+    mBtn3.style.display = "block";
+    orSep.style.display = "flex";
+    act3 = fn3;
+  } else {
+    mBtn3.style.display = "none";
+    orSep.style.display = "none";
+    act3 = null;
+  }
+}
+
+function modalAction(n) {
+  const fn = n === 1 ? act1 : (n === 2 ? act2 : act3);
+  if (fn) fn(); else closeModal();
+}
+
+function copyText(text) {
+  const done = () => { mDesc.textContent = "已复制！去微信里粘贴发送吧。"; };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+
+function fallbackCopy(text, done) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); done(); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+function closeModal() { mask.classList.remove("show"); }
+
+/* 首次渲染 */
+render();
+
+/* PWA 离线缓存 + 自动更新：
+ * 每次打开页面都检查一次新版本；发现新版本立即切换并自动刷新，
+ * 所以同学打开时看到的就是最新内容（断网时仍可用缓存）。 */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").then((reg) => {
+      reg.update();
+    }).catch(() => {});
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (refreshing) return;
+      refreshing = true;
+      location.reload();
+    });
+  });
+}
+</script>
+</body>
+</html>

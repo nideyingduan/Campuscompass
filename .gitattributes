@@ -1,0 +1,9 @@
+# 本项目是"按字节部署"的纯静态站（GitHub → CloudBase 静态托管），
+# 禁止 git 对文件做行尾/编码转换，保证仓库内容与线上文件逐字节一致。
+* -text
+
+# 图片按二进制处理（不做文本 diff）
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.ico binary
