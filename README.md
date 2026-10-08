@@ -77,6 +77,11 @@ const SCHOOLS = {
 
 ## 更新记录
 
+- **v3.3**（2026-10-08）：补齐 PNG 图标，修手机桌面图标不更新
+  - 新增 `icons/icon-192.png`、`icons/icon-512.png`、`icons/apple-touch-icon.png`（180×180，均带透明通道，由指南针 SVG 渲染而来）
+  - `manifest.json` 增加 PNG 图标声明：安卓 Chrome 生成 WebAPK、iOS"添加到主屏幕"都依赖 PNG，**只有 SVG 时可能退回旧图标或显示网页截图**
+  - `index.html` 增加 `<link rel="apple-touch-icon">`（iOS 专用）
+  - `sw.js` 的 `ASSETS` 收录这三个图标，`CACHE_NAME` 升至 `Campuscompass-v3.3`
 - **v3.2**（2026-10-08）：应用图标更换
   - 图标由"蓝色圆角方块 + 四格小白块"改为**指南针**（蓝底 `#1d4ed8` + 白色十字刻度 + 红色指北针 `#ef4444`），呼应"校航"导航定位
   - 为绕开系统/浏览器对图标的**老缓存**，新增 `icons/icon-v3.svg`；`index.html`、`manifest.json` 与 `sw.js` 的 ASSETS 均改为引用它
