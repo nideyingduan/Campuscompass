@@ -77,6 +77,9 @@ const SCHOOLS = {
 
 ## 更新记录
 
+- **v3.4**（2026-10-14）：新增"菜鸟教程"卡片
+  - "学习考试"分组新增：菜鸟教程 `https://www.runoob.com/`（编程入门 · 参考手册，图标 `book`），分组内共 5 张卡片
+  - `sw.js` 的 `CACHE_NAME` 升至 `Campuscompass-v3.4`
 - **v3.3**（2026-10-08）：补齐 PNG 图标，修手机桌面图标不更新
   - 新增 `icons/icon-192.png`、`icons/icon-512.png`、`icons/apple-touch-icon.png`（180×180，均带透明通道，由指南针 SVG 渲染而来）
   - `manifest.json` 增加 PNG 图标声明：安卓 Chrome 生成 WebAPK、iOS"添加到主屏幕"都依赖 PNG，**只有 SVG 时可能退回旧图标或显示网页截图**
