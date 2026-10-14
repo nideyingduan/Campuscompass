@@ -77,6 +77,9 @@ const SCHOOLS = {
 
 ## 更新记录
 
+- **v3.5**（2026-10-14）：新增三张算法刷题卡片
+  - "学习考试"分组新增：力扣 `https://leetcode.cn/problemset/`、牛客网 `https://ac.nowcoder.com/acm/problem/list`、洛谷 `https://www.luogu.com.cn/problem/list?type=luogu&page=1`（该分组现为 8 张卡片）
+  - `sw.js` 的 `CACHE_NAME` 升至 `Campuscompass-v3.5`
 - **v3.4**（2026-10-14）：新增"菜鸟教程"卡片
   - "学习考试"分组新增：菜鸟教程 `https://www.runoob.com/`（编程入门 · 参考手册，图标 `book`），分组内共 5 张卡片
   - `sw.js` 的 `CACHE_NAME` 升至 `Campuscompass-v3.4`
