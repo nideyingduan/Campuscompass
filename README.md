@@ -77,6 +77,10 @@ const SCHOOLS = {
 
 ## 更新记录
 
+- **v3.6**（2026-10-14）：拆出独立「编程刷题」分组
+  - 从"学习考试"移出 菜鸟教程 / 力扣 / 牛客网 / 洛谷 四张卡片，组成新分组「编程刷题」（主题色 `#f59e0b`），位置紧跟"学习考试"
+  - "学习考试"回到 4 张卡片（易班优课 / 头歌 / 学习通 / 学信网）
+  - `sw.js` 的 `CACHE_NAME` 升至 `Campuscompass-v3.6`
 - **v3.5**（2026-10-14）：新增三张算法刷题卡片
   - "学习考试"分组新增：力扣 `https://leetcode.cn/problemset/`、牛客网 `https://ac.nowcoder.com/acm/problem/list`、洛谷 `https://www.luogu.com.cn/problem/list?type=luogu&page=1`（该分组现为 8 张卡片）
   - `sw.js` 的 `CACHE_NAME` 升至 `Campuscompass-v3.5`
