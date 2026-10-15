@@ -583,16 +583,17 @@ function hideLoginInfo() { document.getElementById("loginMask").classList.remove
 function showAbout() { document.getElementById("aboutMask").classList.add("show"); }
 function hideAbout() { document.getElementById("aboutMask").classList.remove("show"); }
 
-/* 问题反馈：纯静态页不做表单收集，只提供「去 GitHub 提 Issue」或「复制模板发到班群」两条路 */
-const FEEDBACK_URL = "https://github.com/nideyingduan/Campuscompass/issues/new";
+/* 问题反馈：纯静态页不做表单收集；问卷在第三方页面填写，本页不采集任何数据 */
+const FEEDBACK_SURVEY = "https://v.wjx.cn/vm/Q0ehWGe.aspx";                       /* 主渠道：问卷星，匿名、免登录 */
+const FEEDBACK_URL = "https://github.com/nideyingduan/Campuscompass/issues/new";  /* 备选：GitHub Issue */
 const FEEDBACK_TEMPLATE = "【校航反馈】\n1. 位置（哪张卡片 / 哪个分组）：\n2. 问题（打不开 / 链接失效 / 显示异常 / 想加什么）：\n3. 手机型号与浏览器：\n4. 网络环境（校园网 / 流量 / 是否已连 VPN）：";
 function showFeedback() {
   mImg.style.display = "none";
   mCopy.style.display = "none";
   mList.style.display = "none";
   mTitle.textContent = "问题反馈";
-  mDesc.innerHTML = "发现<b>链接失效</b>、<b>想加新入口</b>、或页面显示有问题，都欢迎反馈。<br><br><b>① 到 GitHub 提 Issue</b>：可以追踪进度（国内访问 GitHub 可能不稳）。<br><br><b>② 复制反馈模板</b>：发到班级群或直接发我，写清「哪张卡片 + 什么问题 + 手机型号/浏览器」。";
-  showBtns("打开反馈页", () => { closeModal(); window.location.href = FEEDBACK_URL; }, "复制反馈模板", () => copyText(FEEDBACK_TEMPLATE));
+  mDesc.innerHTML = "发现<b>链接失效</b>、<b>想加新入口</b>、或页面显示有问题，都欢迎反馈。<br>问卷<b>匿名、1 分钟、不用登录</b>。";
+  showBtns("填写反馈问卷", () => { closeModal(); window.location.href = FEEDBACK_SURVEY; }, "复制反馈模板", () => copyText(FEEDBACK_TEMPLATE), "到 GitHub 提 Issue", () => { closeModal(); window.location.href = FEEDBACK_URL; });
   mask.classList.add("show");
 }
 
