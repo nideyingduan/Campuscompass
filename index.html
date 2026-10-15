@@ -320,6 +320,7 @@
   <span class="flink" onclick="showInstallGuide()">添加到桌面</span>
   <span class="flink" onclick="showLoginInfo()">登录状态说明</span>
   <span class="flink" onclick="showAbout()">关于本页</span>
+  <span class="flink" onclick="showFeedback()">问题反馈</span>
 </footer>
 
 <!-- 声明弹窗（每次打开页面第一个弹出） -->
@@ -500,6 +501,8 @@ const SCHOOLS = {
         items: [
           { name: "真如校园",   type: "qr", img: "qrcodes/订桶装水.jpg", icon: "home", desc: "校园服务 · 长按识别" },
           { name: "物业报修",   type: "qr", img: "qrcodes/物业报修.jpg", link: "#小程序://诚信快修/gA5U9FRP0EkdZZv", icon: "wrench", desc: "宿舍报修 · 长按识别" },
+          { name: "空调报修指南", url: "https://gdmu-acrr-docs.apps.gdmuna.com/docs/guide/requester", icon: "file", desc: "报修流程 · 图文说明" },
+          { name: "空调报修入口", url: "https://gdmu-acrr.apps.gdmuna.com/repair/", icon: "wrench", desc: "在线提交 · 先连校园网", vpn: true },
           { name: "广东医缴费", type: "qr", img: "qrcodes/广东医缴费.jpg", icon: "card", desc: "缴费充值 · 长按识别" },
           { name: "广东医招生", type: "wxcopylink", link: "#小程序://广东医招生/IKAuoPUwDarFUXr", icon: "cap", desc: "招生小程序 · 微信内打开" },
         ]
@@ -579,6 +582,19 @@ function showLoginInfo() { document.getElementById("loginMask").classList.add("s
 function hideLoginInfo() { document.getElementById("loginMask").classList.remove("show"); }
 function showAbout() { document.getElementById("aboutMask").classList.add("show"); }
 function hideAbout() { document.getElementById("aboutMask").classList.remove("show"); }
+
+/* 问题反馈：纯静态页不做表单收集，只提供「去 GitHub 提 Issue」或「复制模板发到班群」两条路 */
+const FEEDBACK_URL = "https://github.com/nideyingduan/Campuscompass/issues/new";
+const FEEDBACK_TEMPLATE = "【校航反馈】\n1. 位置（哪张卡片 / 哪个分组）：\n2. 问题（打不开 / 链接失效 / 显示异常 / 想加什么）：\n3. 手机型号与浏览器：\n4. 网络环境（校园网 / 流量 / 是否已连 VPN）：";
+function showFeedback() {
+  mImg.style.display = "none";
+  mCopy.style.display = "none";
+  mList.style.display = "none";
+  mTitle.textContent = "问题反馈";
+  mDesc.innerHTML = "发现<b>链接失效</b>、<b>想加新入口</b>、或页面显示有问题，都欢迎反馈。<br><br><b>① 到 GitHub 提 Issue</b>：可以追踪进度（国内访问 GitHub 可能不稳）。<br><br><b>② 复制反馈模板</b>：发到班级群或直接发我，写清「哪张卡片 + 什么问题 + 手机型号/浏览器」。";
+  showBtns("打开反馈页", () => { closeModal(); window.location.href = FEEDBACK_URL; }, "复制反馈模板", () => copyText(FEEDBACK_TEMPLATE));
+  mask.classList.add("show");
+}
 
 /* "添加到桌面"气泡提示：每个会话首次显示一次，8 秒后自动消失 */
 function showInstallHint() {
