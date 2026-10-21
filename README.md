@@ -77,6 +77,9 @@ const SCHOOLS = {
 
 ## 更新记录
 
+- **v3.9**（2026-10-21）：新增"智慧树"卡片
+  - "学习考试"分组新增：智慧树 `https://www.zhihuishu.com/`（网课平台，点击先弹"返回校航"提示）
+  - `sw.js` 的 `CACHE_NAME` 升至 `Campuscompass-v3.9`
 - **v3.8**（2026-10-15）：问题反馈接入问卷星
   - 「问题反馈」首选渠道改为**问卷星问卷**（匿名、免登录、1 分钟）：`https://v.wjx.cn/vm/Q0ehWGe.aspx`
   - 保留两个备选：复制反馈模板（发班级群）、到 GitHub 提 Issue
