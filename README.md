@@ -77,6 +77,9 @@ const SCHOOLS = {
 
 ## 更新记录
 
+- **v3.10**（2026-10-23）：新增"批改网"卡片
+  - "学习考试"分组新增：批改网 `https://www.pigai.org/`（英语作文在线批改）
+  - `sw.js` 的 `CACHE_NAME` 升至 `Campuscompass-v3.10`
 - **v3.9**（2026-10-21）：新增"智慧树"卡片
   - "学习考试"分组新增：智慧树 `https://www.zhihuishu.com/`（网课平台，点击先弹"返回校航"提示）
   - `sw.js` 的 `CACHE_NAME` 升至 `Campuscompass-v3.9`
